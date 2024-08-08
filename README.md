@@ -30,7 +30,7 @@ private static async Task CreateIndexWithMapping(ElasticsearchClient client)
     {
         i.Mappings(m =>
         {
-            m.Properties(ElasticAutoMapper.MapToElasticIndex<T>()); // You can set the T with you're model.
+            m.Properties(ElasticAutoMapper.MapToElasticIndex<T>()); The model you want to map can be set to T.
         });
     });
     
