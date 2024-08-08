@@ -5,7 +5,7 @@ That makes you can easily auto map for elasticsearch types.
 ## Example of the code:
 
 ```csharp
- var settings = new ElasticsearchClientSettings(new Uri(""))
+var settings = new ElasticsearchClientSettings(new Uri(""))
             .Authentication(new BasicAuthentication("", ""))
             .PrettyJson()
             .CertificateFingerprint("")
