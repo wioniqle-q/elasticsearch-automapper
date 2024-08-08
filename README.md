@@ -30,7 +30,7 @@ private static async Task CreateIndexWithMapping(ElasticsearchClient client)
     {
         i.Mappings(m =>
         {
-            //The model you want to map can be set to T.
+            // The model you want to map can be set to T.
             m.Properties(ElasticAutoMapper.MapToElasticIndex<T>()); 
         });
     });
@@ -39,4 +39,12 @@ private static async Task CreateIndexWithMapping(ElasticsearchClient client)
         ? "Index created successfully with mapping."
         : $"Failed to create index: {createIndex.DebugInformation}");
  }
+```
+
+## Custom Attributes:
+```csharp
+[ElasticsearchCustomMapping] => You can make a custom maps for custom wishes.
+[ElasticsearchIgnore] => Using this attribute you can write to models that you do not want to be processed.
+[ElasticsearchPropertyName] => Using this attribute you can set the name of the object in your model without SneakCase.
+[ElasticsearchStringMapping] => Using this attribute you can say that the object in your model is a TextProperty.
 ```
