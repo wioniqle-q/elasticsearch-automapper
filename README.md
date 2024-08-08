@@ -2,6 +2,9 @@
 
 That makes you can easily auto map for elasticsearch types.
 
+## Versions
+Elastic.Clients.Elasticseach => 8.14.9
+
 ## Example of the code:
 
 ```csharp
