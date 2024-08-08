@@ -5,6 +5,7 @@
 
 ## Versions
 **Elastic.Clients.Elasticseach => 8.14.9**
+**.NET Version => 9.0 Preview 6.0**
 
 ## Example of the code:
 
