@@ -1,45 +1,52 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Text;
-using ElasticSearchMapper.Pools;
 
 namespace ElasticSearchMapper.Extensions;
 
 internal static class StringExtensions
 {
+    private const int StackAllocThreshold = 1024;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToSnakeCase(this string str)
     {
         if (string.IsNullOrEmpty(str))
             return str;
 
-        var writer = BufferWriterPool.Rent();
-        try
-        {
-            writer.GetSpan(1)[0] = (byte)char.ToLowerInvariant(str[0]);
-            writer.Advance(1);
+        var len = str.Length;
+        var maxResultLength = len * 2;
 
-            for (var i = 1; i < str.Length; i++)
-                if (char.IsUpper(str[i]))
+        return maxResultLength <= StackAllocThreshold
+            ? ToSnakeCaseInternal(str, stackalloc char[maxResultLength])
+            : ToSnakeCaseInternal(str, new char[maxResultLength]);
+    }
+
+    private static unsafe string ToSnakeCaseInternal(string str, Span<char> buffer)
+    {
+        var resultIndex = 0;
+
+        fixed (char* strPtr = str)
+        {
+            var src = strPtr;
+
+            buffer[resultIndex++] = (char)(*src | 0x20);
+            src++;
+
+            for (var i = 1; i < str.Length; i++, src++)
+            {
+                var c = *src;
+                if ((uint)(c - 'A') <= 'Z' - 'A')
                 {
-                    writer.GetSpan(2)[0] = (byte)'_';
-                    writer.GetSpan(2)[1] = (byte)char.ToLowerInvariant(str[i]);
-                    writer.Advance(2);
+                    if ((uint)(buffer[resultIndex - 1] - 'a') <= 'z' - 'a')
+                        buffer[resultIndex++] = '_';
+                    buffer[resultIndex++] = (char)(c | 0x20);
                 }
                 else
                 {
-                    writer.GetSpan(1)[0] = (byte)str[i];
-                    writer.Advance(1);
+                    buffer[resultIndex++] = c;
                 }
+            }
+        }
 
-            return Encoding.UTF8.GetString(writer.WrittenSpan);
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException("Failed to convert string to snake case", e);
-        }
-        finally
-        {
-            BufferWriterPool.Return(writer);
-        }
+        return new string(buffer[..resultIndex]);
     }
 }

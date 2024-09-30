@@ -5,11 +5,11 @@
         <LangVersion>latestmajor</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.14.8" />
-      <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.0-preview.6.24328.4" />
+      <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.15.8" />
     </ItemGroup>
 
 </Project>
